@@ -2,31 +2,24 @@
 // Authentication Client-Side Code
 // ===========================
 
-const AUTH_CONFIG = {
-    API_URL: 'http://localhost:5000/api',
-    TOKEN_KEY: 'authToken',
-    USER_ID_KEY: 'userId',
-    USER_NAME_KEY: 'userName'
-};
-
 // ===========================
 // Token Management
 // ===========================
 
 function saveToken(token, userId, userName) {
-    localStorage.setItem(AUTH_CONFIG.TOKEN_KEY, token);
-    localStorage.setItem(AUTH_CONFIG.USER_ID_KEY, userId);
-    localStorage.setItem(AUTH_CONFIG.USER_NAME_KEY, userName);
+    localStorage.setItem(window.CONFIG.TOKEN_KEY, token);
+    localStorage.setItem(window.CONFIG.USER_ID_KEY, userId);
+    localStorage.setItem(window.CONFIG.USER_NAME_KEY, userName);
 }
 
 function getToken() {
-    return localStorage.getItem(AUTH_CONFIG.TOKEN_KEY);
+    return localStorage.getItem(window.CONFIG.TOKEN_KEY);
 }
 
 function removeToken() {
-    localStorage.removeItem(AUTH_CONFIG.TOKEN_KEY);
-    localStorage.removeItem(AUTH_CONFIG.USER_ID_KEY);
-    localStorage.removeItem(AUTH_CONFIG.USER_NAME_KEY);
+    localStorage.removeItem(window.CONFIG.TOKEN_KEY);
+    localStorage.removeItem(window.CONFIG.USER_ID_KEY);
+    localStorage.removeItem(window.CONFIG.USER_NAME_KEY);
 }
 
 function isAuthenticated() {
@@ -60,7 +53,7 @@ async function loadUserInfo() {
     const token = getToken();
     
     try {
-        const response = await fetch(`${AUTH_CONFIG.API_URL}/auth/me`, {
+        const response = await fetch(`${window.CONFIG.API_URL}/auth/me`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -78,7 +71,7 @@ async function loadUserInfo() {
                 updateUserHeader(userName, userEmail);
                 
                 // Save user name
-                localStorage.setItem(AUTH_CONFIG.USER_NAME_KEY, userName);
+                localStorage.setItem(window.CONFIG.USER_NAME_KEY, userName);
             }
         } else if (response.status === 401) {
             // Token expired or invalid
@@ -108,7 +101,7 @@ async function logout() {
     
     try {
         // Call logout endpoint
-        await fetch(`${AUTH_CONFIG.API_URL}/auth/logout`, {
+        await fetch(`${window.CONFIG.API_URL}/auth/logout`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -125,6 +118,9 @@ async function logout() {
         window.location.href = 'auth.html';
     }
 }
+
+// Make logout globally accessible
+window.logout = logout;
 
 // ===========================
 // API Request Helper
@@ -149,7 +145,7 @@ async function authenticatedFetch(endpoint, options = {}) {
     };
 
     try {
-        const response = await fetch(`${AUTH_CONFIG.API_URL}${endpoint}`, {
+        const response = await fetch(`${window.CONFIG.API_URL}${endpoint}`, {
             ...options,
             headers
         });
@@ -180,16 +176,3 @@ document.addEventListener('DOMContentLoaded', function() {
         checkAuthentication();
     }
 });
-
-// ===========================
-// Export for use in app.js
-// ===========================
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        getToken,
-        removeToken,
-        isAuthenticated,
-        authenticatedFetch,
-        logout
-    };
-}
