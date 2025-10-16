@@ -461,14 +461,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ===========================
-// Export functions (for testing)
+// Make functions globally accessible for inline event handlers
 // ===========================
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        predictPrice,
-        initiatePayment,
-        showInspectionForm,
-        formatCurrency
-    };
-
-}
+window.predictPrice = predictPrice;
+window.showInspectionForm = showInspectionForm;
+window.initiatePayment = initiatePayment;
