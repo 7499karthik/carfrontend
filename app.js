@@ -1,12 +1,4 @@
 // ===========================
-// Configuration
-// ===========================
-const CONFIG = {
-    API_URL: 'https://carvalueai-6.onrender.com/',
-    RAZORPAY_KEY: 'rzp_live_RTqBb8Uuk3L4QG'
-};
-
-// ===========================
 // Global Variables
 // ===========================
 let currentCarId = null;
@@ -115,7 +107,7 @@ async function predictPrice() {
             return;
         }
 
-        const response = await fetch(`${CONFIG.API_URL}/predict`, {
+        const response = await fetch(`${window.CONFIG.API_URL}/predict`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -251,7 +243,7 @@ async function initiatePayment() {
             return;
         }
 
-        const response = await fetch(`${CONFIG.API_URL}/create-order`, {
+        const response = await fetch(`${window.CONFIG.API_URL}/create-order`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -288,7 +280,7 @@ async function initiatePayment() {
 
 function openRazorpayCheckout(orderData, customerData) {
     const options = {
-        key: orderData.key_id || CONFIG.RAZORPAY_KEY,
+        key: orderData.key_id || window.CONFIG.RAZORPAY_KEY,
         amount: orderData.amount,
         currency: orderData.currency || 'INR',
         name: 'CarValueAI',
@@ -338,7 +330,7 @@ async function verifyPayment(paymentResponse) {
             return;
         }
 
-        const response = await fetch(`${CONFIG.API_URL}/verify-payment`, {
+        const response = await fetch(`${window.CONFIG.API_URL}/verify-payment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -382,7 +374,7 @@ async function bookInspection(orderId) {
             return;
         }
 
-        const response = await fetch(`${CONFIG.API_URL}/book-inspection`, {
+        const response = await fetch(`${window.CONFIG.API_URL}/book-inspection`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
